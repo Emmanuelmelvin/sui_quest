@@ -2,22 +2,18 @@
 
 SuiQuest is a platform where event organizers (like SUI on Campus leads) can create interactive learning quests with tasks, questions, and time-limited challenges. Participants complete the tasks and earn NFTs as proof of achievement — gamifying education with Web3.
 
----
 
 ## 🎯 Project Name: SuiQuest
 
 **Type:** Web3 learning + event platform  
 **Built For:** SUI on Campus, Student Communities, Blockchain Educators
 
----
 
 ## 🧠 Core Idea
 
 SuiQuest enables **event organizers** to create interactive learning quests. Each quest consists of tasks, questions, and time-limited challenges. **Participants** complete these tasks to earn **NFTs as proof of achievement**, making education engaging and verifiable on-chain.
 
----
 
-## 👥 How It Works
 
 ### For Organizers
 
@@ -37,7 +33,6 @@ SuiQuest enables **event organizers** to create interactive learning quests. Eac
 - Earn a **grand badge NFT** for completing all tasks
 - Appear on a **leaderboard**
 
----
 
 ## 🛠️ Tech Stack
 
@@ -47,7 +42,6 @@ SuiQuest enables **event organizers** to create interactive learning quests. Eac
   - Event creation, start, submission
   - NFT minting (task NFT + final badge)
 
----
 
 ## 🔥 Why It’s Unique
 
@@ -56,7 +50,6 @@ SuiQuest enables **event organizers** to create interactive learning quests. Eac
 - Lets anyone create **quiz-based, on-chain learning events**
 - Makes it fun for students to learn Web3 while earning verifiable badges
 
----
 
 ## Prerequisites
 
