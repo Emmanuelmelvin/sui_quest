@@ -42,9 +42,12 @@ public entry fun create_event(
 }
 
 pubic entry fun  end_event(
-    event: &mut Event,
+    event_id: u64,
+    event_register: &mut EventRegister,
     ctx: &mut TxContext
 ) {
+
+    const event = event_register::get_event_from_register(event_register, event_id);
     assert!(!event.has_ended, EEventHasEnded);
     assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
 
@@ -54,6 +57,23 @@ pubic entry fun  end_event(
     // Emit an event to notify that the event has ended
     event::emit(event);
 }
+
+pubic entry fun delete_event(
+    event_id: u64,
+    event_register: &mut EventRegister,
+    ctx: &mut TxContext
+) {
+    const event = event_register::get_event_from_register(event_register, event_id);
+    // Ensure the event has not ended and the sender is authorized
+    assert!(!event.has_ended, EEventHasEnded);
+    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
+
+    // Remove the event from the event register
+    event_register::remove_from_register(event);
+
+    // Emit an event to notify that the event has been deleted
+    event::emit(event);
+}   
 
 public entry fun add_quest_to_event(
     event: &mut Event,
