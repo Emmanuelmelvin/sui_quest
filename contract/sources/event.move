@@ -1,19 +1,27 @@
 module sui_quest::event;
 
 use sui_quest::quest::{Self, Quest};
-use sui_quest::event_register::{Self, EventRegister};
+use sui_quest::event_register;
+use sui_quest::event_register::EventRegister;
+use sui::object::UID;
 use sui::event;
+use sui::tx_context::TxContext;
 use std::string::String;
 
 const EEventHasEnded: u64 = 103;
-const ENotAuthorized:u64 = 104;
+const ENotAuthorized: u64 = 104;
 
-public struct Event has copy, drop, store  {
+public struct Event has store, key {
+    id: UID,
     name: String,
-    quests: vector<Quest>
+    quests: vector<Quest>,
     orgarnizers: address,
     metadata_id: String,
-    has_ended: false
+    has_ended: bool
+}
+
+public fun id(event: &Event): &UID {
+    &event.id
 }
 
 public entry fun create_event(
@@ -22,58 +30,40 @@ public entry fun create_event(
     event_register: &mut EventRegister,
     ctx: &mut TxContext
 ) {
-
-   let new_event = Event {
-        name,
-        quests: vector<Quest>[],
-        orgarnizers: ctx.sender(),
-        metadata_id,
-        event_ended: false
-
+    let new_event = Event {
+        id: object::new(ctx),
+        name: name,
+        quests: vector::empty<Quest>(),
+        orgarnizers: tx_context::sender(ctx),
+        metadata_id: metadata_id,
+        has_ended: false
     };
-    // Create a new Event object and store it in the event register
-    event_register::add_to_register(
-        event_register,
-        &new_event
-        );
-    // Emit an event to notify that a new event has been created
 
-    event::emit(new_event)
+    let Event {id, name: _, quests: _, orgarnizers: _, metadata_id: _, has_ended: _} = new_event;
+    event_register::add_to_register(event_register, id);
+    // event::emit(new_event); // REMOVE: Event does not have copy+drop
 }
 
-pubic entry fun  end_event(
-    event_id: u64,
-    event_register: &mut EventRegister,
+public entry fun end_event(
+    event: &mut Event,
     ctx: &mut TxContext
 ) {
-
-    const event = event_register::get_event_from_register(event_register, event_id);
     assert!(!event.has_ended, EEventHasEnded);
-    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
-
-    // Mark the event as ended
+    assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
     event.has_ended = true;
-
-    // Emit an event to notify that the event has ended
-    event::emit(event);
+    // event::emit(*event); // REMOVE: Event does not have copy+drop
 }
 
-pubic entry fun delete_event(
-    event_id: u64,
+public entry fun delete_event(
     event_register: &mut EventRegister,
+    event: &Event,
     ctx: &mut TxContext
 ) {
-    const event = event_register::get_event_from_register(event_register, event_id);
-    // Ensure the event has not ended and the sender is authorized
     assert!(!event.has_ended, EEventHasEnded);
-    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
-
-    // Remove the event from the event register
-    event_register::remove_from_register(event);
-
-    // Emit an event to notify that the event has been deleted
-    event::emit(event);
-}   
+    assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
+    event_register::remove_from_register(event_register, &event.id);
+    // Optionally emit a deletion event here if needed
+}
 
 public entry fun add_quest_to_event(
     event: &mut Event,
@@ -82,64 +72,58 @@ public entry fun add_quest_to_event(
     duration_sec: u64,
     metadata_id: String,
     ctx: &mut TxContext
-){
-    assert!(event.has_ended, EEventHasEnded);
-    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
-    const new_quest = quest::new(
+) {
+    let new_quest = quest::new(
         name,
         task_count,
         duration_sec,
         metadata_id,
-        event_id: event.id,
     );
-
-    event.quests.push_back(new_quest);
+    assert!(!event.has_ended, EEventHasEnded);
+    assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
+    vector::push_back(&mut event.quests, new_quest);
 }
 
+
 public entry fun remove_quest_from_event(
-    event: &Event,  
+    event: &mut Event,
     quest_index: u64,
     ctx: &mut TxContext
-){
-
-    assert!(event.has_ended, EEventHasEnded);
-    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
-
-    event.quests.remove(quest_index);
+) {
+    assert!(!event.has_ended, EEventHasEnded);
+    assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
+    let removed_quest = vector::remove(&mut event.quests, quest_index);
+    quest::destroy(removed_quest); // Explicitly destroy removed quest
 }
 
 public entry fun edit_quest_in_event(
-    event: &Event,
+    event: &mut Event,
     name: String,
     task_count: u8,
     duration_sec: u64,
-    quest_index:  u64,
+    quest_index: u64,
     ctx: &mut TxContext
-){
-    assert!(event.has_ended, EEventHasEnded);
-    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
-
-    const quest_to_edit = event.borrow_mut(quest_index);
-
+) {
+    assert!(!event.has_ended, EEventHasEnded);
+    assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
+    let quest_to_edit = vector::borrow_mut(&mut event.quests, quest_index);
     quest::edit(
         name,
         task_count,
         duration_sec,
         quest_to_edit
-    )
+    );
 }
 
-pubic entry fun start_quest_in_event(
+public entry fun start_quest_in_event(
     event: &mut Event,
     quest_index: u64,
     start_time: u64,
     ctx: &mut TxContext
 ) {
-    assert!(event.has_ended, EEventHasEnded);
-    assert!(!event.orgarnizers == ctx.sender(), ENotAuthorized);
-
-    const quest_to_start = event.borrow_mut(quest_index);
-
+    assert!(!event.has_ended, EEventHasEnded);
+    assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
+    let quest_to_start = vector::borrow_mut(&mut event.quests, quest_index);
     quest::start(
         quest_to_start,
         start_time

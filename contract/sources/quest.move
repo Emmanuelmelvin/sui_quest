@@ -6,8 +6,7 @@ module sui_quest::sui_quest;
 // For Move coding conventions, see
 // https://docs.sui.io/concepts/sui-move-concepts/conventions
 
-module sui_quest::quest {
-   
+module sui_quest::quest;
     use std::string::String;
 
     //constants used for error handling
@@ -15,14 +14,13 @@ module sui_quest::quest {
     const EQuestNotFound: u64 = 101;
     const EQuestHasNoValidTask: u64 = 102;
 
-    public struct Quest has store {
+    public struct Quest has store, drop {
         name: String,
         task_count: u8,
         start_time: u64,
         duration_sec: u64,
         is_started: bool,
         metadata_id: String,
-        event_id: UID,
         users_entered: vector<address>,
         users_winners: vector<address>
     }
@@ -32,7 +30,6 @@ module sui_quest::quest {
         task_count: u8,
         duration_sec: u64,
         metadata_id: String,
-        event_id
     ): Quest {
         // Ensure that the task count is within a reasonable range
         assert!(task_count > 0 && task_count <= 10, EQuestHasNoValidTask);
@@ -40,14 +37,13 @@ module sui_quest::quest {
         assert!(duration_sec > 0, EQuestNotFound);
 
         // Create a new Quest object
-         Quest {
-            name,
-            event_id,
-            task_count,
+        Quest {
+            name: name,
+            task_count: task_count,
             start_time: 0,
-            duration_sec,
+            duration_sec: duration_sec,
             is_started: false,
-            metadata_id,
+            metadata_id: metadata_id,
             users_entered: vector::empty(),
             users_winners: vector::empty()
         }
@@ -59,8 +55,6 @@ module sui_quest::quest {
     ) {
         assert!(!quest.is_started, EQuestHasStarted);
         quest.start_time = start_time;
-        // Set the start time of the quest to the current time
-        // This is done using the clock::now function, which returns the current time in seconds.
         quest.is_started = true;
     }
 
@@ -75,6 +69,10 @@ module sui_quest::quest {
         quest.task_count = task_count;
         quest.duration_sec = duration_sec;
     }
-}
+
+    public fun destroy(q: Quest) {
+        // Explicitly destroy fields if needed, or just let q go out of scope if fields have drop.
+    }
+
 
 
