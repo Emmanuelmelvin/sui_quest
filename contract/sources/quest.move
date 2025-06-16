@@ -15,7 +15,7 @@ module sui_quest::quest {
     const EQuestNotFound: u64 = 101;
     const EQuestHasNoValidTask: u64 = 102;
 
-    public struct Quest {
+    public struct Quest has store {
         name: String,
         task_count: u8,
         start_time: u64,
@@ -76,3 +76,5 @@ module sui_quest::quest {
         quest.duration_sec = duration_sec;
     }
 }
+
+
