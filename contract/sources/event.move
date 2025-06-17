@@ -45,7 +45,7 @@ public entry fun new(
 }
 
 
-public entry fun end_event(
+public entry fun end(
     event: &mut Event,
     ctx: &mut TxContext
 ) {
@@ -55,14 +55,16 @@ public entry fun end_event(
     // event::emit(*event); // REMOVE: Event does not have copy+drop
 }
 
-public entry fun delete_event(
+public entry fun delete(
     event_register: &mut EventRegister,
     event: &Event,
     ctx: &mut TxContext
 ) {
     assert!(!event.has_ended, EEventHasEnded);
     assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
-    event_register::remove_from_register(event_register, &event.id);
+    event_register::remove_from_register(event_register, event.id);
+    let Event {id, name: _, quests: _, orgarnizers: _, metadata_id: _, has_ended: _} = event;
+    id.delete(); // Delete the event object
     // Optionally emit a deletion event here if needed
 }
 

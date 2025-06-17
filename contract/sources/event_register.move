@@ -32,7 +32,7 @@ public (package) fun add_to_register(
 
 public (package) fun remove_from_register(
     register: &mut EventRegister,
-    event_id: &UID,
+    event_id: UID,
 ) {
     let len = vector::length(&register.events);
     let mut i = 0;
@@ -59,6 +59,5 @@ public fun create_mock_register(ctx: &mut TxContext): EventRegister {
 
 #[test_only]
 public fun destroy(register: EventRegister) {
-    // Explicitly destroy fields if needed, or just let register go out of scope if fields have drop.
-    // In this case, we don't need to do anything as the object will be deleted when it goes out of scope.
+   
 }

@@ -44,12 +44,17 @@ fun manipulate_event() {
 
     event_register::add_to_register(&mut register, event_id);
 
-    event::end_event(
+    event::end(
         &mut event,
         ctx
     );
 
     // Consume register to avoid unused value error (no drop ability)
     event_register::destroy(register);
+    event::delete(
+        &mut register,
+        &event,
+        ctx
+    );
 }
 
