@@ -20,6 +20,8 @@ fun init(ctx: &mut TxContext) {
     transfer::share_object(event_register);
 }
 
+
+
 public (package) fun add_to_register(
     register: &mut EventRegister,
     event_id: UID,
@@ -44,4 +46,19 @@ public (package) fun remove_from_register(
         i = i + 1;
     };
     abort EEventNotFound;
+}
+
+#[test_only]
+public fun create_mock_register(ctx: &mut TxContext): EventRegister {
+    EventRegister{
+        id: object::new(ctx),
+        events: vector[],
+        count: 0
+    }
+}
+
+#[test_only]
+public fun destroy(register: EventRegister) {
+    // Explicitly destroy fields if needed, or just let register go out of scope if fields have drop.
+    // In this case, we don't need to do anything as the object will be deleted when it goes out of scope.
 }

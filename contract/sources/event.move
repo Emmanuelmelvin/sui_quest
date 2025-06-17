@@ -24,7 +24,7 @@ public fun id(event: &Event): &UID {
     &event.id
 }
 
-public entry fun create_event(
+public entry fun new(
     name: String,
     metadata_id: String,
     event_register: &mut EventRegister,
@@ -43,6 +43,7 @@ public entry fun create_event(
     event_register::add_to_register(event_register, id);
     // event::emit(new_event); // REMOVE: Event does not have copy+drop
 }
+
 
 public entry fun end_event(
     event: &mut Event,
@@ -128,4 +129,28 @@ public entry fun start_quest_in_event(
         quest_to_start,
         start_time
     );
+}
+
+
+#[test_only]
+public fun create_mock_event(
+    name: String,
+    metadata_id: String,
+    ctx: &mut TxContext
+): Event {
+    Event {
+        id: object::new(ctx),
+        name: name,
+        quests: vector::empty<Quest>(),
+        orgarnizers: tx_context::sender(ctx),
+        metadata_id: metadata_id,
+        has_ended: false
+    }
+}
+
+#[test_only]
+public fun get_quest_count_in_event(
+   event: &Event
+): u64{
+    event.quests.length()
 }

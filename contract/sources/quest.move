@@ -14,7 +14,7 @@ module sui_quest::quest;
     const EQuestNotFound: u64 = 101;
     const EQuestHasNoValidTask: u64 = 102;
 
-    public struct Quest has store, drop {
+    public struct Quest has copy, store, drop {
         name: String,
         task_count: u8,
         start_time: u64,
@@ -72,6 +72,18 @@ module sui_quest::quest;
 
     public fun destroy(q: Quest) {
         // Explicitly destroy fields if needed, or just let q go out of scope if fields have drop.
+    }
+
+    #[test_only]
+    public  fun check_if_quest_has_started(
+        quest: &Quest
+    ): bool  {
+        if(quest.is_started){
+            true
+        }else{
+            false
+        }
+        
     }
 
 
