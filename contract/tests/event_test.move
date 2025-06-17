@@ -24,37 +24,29 @@ fun create_event(ctx: &mut tx_context::TxContext): Event {
     )
 }
 
-#[test]
-fun manipulate_event() {
-    let mut ctx = &mut tx_context::dummy();
-    let mut event = create_event(ctx);
 
-    event::add_quest_to_event(
-        &mut event,
+#[test]
+fun create_event_and_add_quest(){
+    let mut ctx = &mut tx_context::dummy();
+    //let mut register = create_register(ctx);
+
+    let mut event_test = create_event(ctx);
+
+    event::add_quest(
+        &mut event_test,
         b"".to_string(),
         5,
-        100001,
+        1000001,
         b"".to_string(),
-        ctx
+        ctx,
     );
 
-    let mut register = create_register(ctx);
-    // Use accessor to get event id instead of destructuring
-    let event_id = event::id(&event);
+    let _: &vector<Quest> =  event::get_quest_from_events(&event_test);
 
-    event_register::add_to_register(&mut register, event_id);
-
-    event::end(
-        &mut event,
-        ctx
+    event::delete_event(
+        event_test,
     );
 
-    // Consume register to avoid unused value error (no drop ability)
-    event_register::destroy(register);
-    event::delete(
-        &mut register,
-        &event,
-        ctx
-    );
 }
+
 

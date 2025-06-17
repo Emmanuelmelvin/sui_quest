@@ -54,21 +54,28 @@ public entry fun end(
     event.has_ended = true;
     // event::emit(*event); // REMOVE: Event does not have copy+drop
 }
-
+ 
 public entry fun delete(
     event_register: &mut EventRegister,
-    event: &Event,
+    event: Event,
     ctx: &mut TxContext
 ) {
     assert!(!event.has_ended, EEventHasEnded);
     assert!(event.orgarnizers == tx_context::sender(ctx), ENotAuthorized);
-    event_register::remove_from_register(event_register, event.id);
-    let Event {id, name: _, quests: _, orgarnizers: _, metadata_id: _, has_ended: _} = event;
-    id.delete(); // Delete the event object
-    // Optionally emit a deletion event here if needed
+
+    let Event {
+    id, 
+    name: _, 
+    quests: _, 
+    orgarnizers: _, 
+    metadata_id: _, 
+    has_ended: _
+    } = event;
+
+    event_register::remove_from_register(event_register, id);
 }
 
-public entry fun add_quest_to_event(
+public entry fun add_quest(
     event: &mut Event,
     name: String,
     task_count: u8,
@@ -88,7 +95,7 @@ public entry fun add_quest_to_event(
 }
 
 
-public entry fun remove_quest_from_event(
+public entry fun remove_quest(
     event: &mut Event,
     quest_index: u64,
     ctx: &mut TxContext
@@ -99,7 +106,7 @@ public entry fun remove_quest_from_event(
     quest::destroy(removed_quest); // Explicitly destroy removed quest
 }
 
-public entry fun edit_quest_in_event(
+public entry fun edit_quest(
     event: &mut Event,
     name: String,
     task_count: u8,
@@ -118,7 +125,7 @@ public entry fun edit_quest_in_event(
     );
 }
 
-public entry fun start_quest_in_event(
+public entry fun start_quest(
     event: &mut Event,
     quest_index: u64,
     start_time: u64,
@@ -148,6 +155,19 @@ public fun create_mock_event(
         metadata_id: metadata_id,
         has_ended: false
     }
+}
+
+#[test]
+public fun delete_event(event: Event){
+     let Event {id, name: _, quests: _, orgarnizers: _, metadata_id: _, has_ended: _} = event;
+        id.delete();
+}
+
+#[test_only]
+public fun get_quest_from_events(
+    event: &Event
+): &vector<Quest> {
+    &event.quests
 }
 
 #[test_only]

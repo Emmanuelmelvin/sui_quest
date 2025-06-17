@@ -3,8 +3,6 @@ module sui_quest::event_register;
 use sui::object;
 use sui::object::UID;
 
-const EEventNotFound: u64 = 105;
-
 public struct EventRegister has key {
     id: UID,
     events: vector<UID>, // Store only event IDs
@@ -45,7 +43,7 @@ public (package) fun remove_from_register(
         };
         i = i + 1;
     };
-    abort EEventNotFound;
+    event_id.delete();
 }
 
 #[test_only]
@@ -57,7 +55,3 @@ public fun create_mock_register(ctx: &mut TxContext): EventRegister {
     }
 }
 
-#[test_only]
-public fun destroy(register: EventRegister) {
-   
-}
