@@ -41,7 +41,7 @@ public entry fun new(
 
     let Event {id, name: _, quests: _, orgarnizers: _, metadata_id: _, has_ended: _} = new_event;
     event_register::add_to_register(event_register, id);
-    // event::emit(new_event); // REMOVE: Event does not have copy+drop
+
 }
 
 
@@ -56,7 +56,6 @@ public entry fun end(
 }
  
 public entry fun delete(
-    event_register: &mut EventRegister,
     event: Event,
     ctx: &mut TxContext
 ) {
@@ -72,7 +71,7 @@ public entry fun delete(
     has_ended: _
     } = event;
 
-    event_register::remove_from_register(event_register, id);
+    id.delete();
 }
 
 public entry fun add_quest(
@@ -140,6 +139,19 @@ public entry fun start_quest(
     );
 }
 
+public entry fun enter_quest (
+    event: &mut Event,
+    quest_index: u64,
+    ctx: &mut TxContext,
+){
+    assert!(!event.has_ended, EEventHasEnded);
+    let mut quest = event.quests[quest_index];
+    quest::enter(
+        &mut quest,
+        ctx,
+    )
+}
+
 
 #[test_only]
 public fun create_mock_event(
@@ -157,11 +169,6 @@ public fun create_mock_event(
     }
 }
 
-#[test]
-public fun delete_event(event: Event){
-     let Event {id, name: _, quests: _, orgarnizers: _, metadata_id: _, has_ended: _} = event;
-        id.delete();
-}
 
 #[test_only]
 public fun get_quest_from_events(
@@ -175,4 +182,16 @@ public fun get_quest_count_in_event(
    event: &Event
 ): u64{
     event.quests.length()
+}
+
+#[test_only]
+public fun check_if_quest_has_started(
+    event: &Event,
+    quest_index:u64
+):  bool {
+    if(quest::check_if_quest_has_started(&event.quests[quest_index])){
+        true
+    }else{
+        false
+    }
 }

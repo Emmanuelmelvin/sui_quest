@@ -9,7 +9,9 @@ public struct EventRegister has key {
     count: u64,
 }
 
-fun init(ctx: &mut TxContext) {
+public struct EVENT_REGISTER has drop {}
+
+fun init(otw: EVENT_REGISTER, ctx: &mut TxContext) {
     let event_register = EventRegister {
         id: object::new(ctx),
         events: vector[],
@@ -28,23 +30,6 @@ public (package) fun add_to_register(
     register.count = register.count + 1;
 }
 
-public (package) fun remove_from_register(
-    register: &mut EventRegister,
-    event_id: UID,
-) {
-    let len = vector::length(&register.events);
-    let mut i = 0;
-    while (i < len) {
-        let id_ref = vector::borrow(&register.events, i);
-        if (id_ref == event_id) {
-            let removed = vector::remove(&mut register.events, i);
-            object::delete(removed);
-            register.count = register.count - 1;
-        };
-        i = i + 1;
-    };
-    event_id.delete();
-}
 
 #[test_only]
 public fun create_mock_register(ctx: &mut TxContext): EventRegister {

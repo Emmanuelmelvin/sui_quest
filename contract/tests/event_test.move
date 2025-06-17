@@ -43,10 +43,40 @@ fun create_event_and_add_quest(){
 
     let _: &vector<Quest> =  event::get_quest_from_events(&event_test);
 
-    event::delete_event(
+    event::delete(
         event_test,
+        ctx,
     );
 
+}
+
+#[test]
+fun create_event_and_edit_quest(){
+    let mut ctx = &mut tx_context::dummy();
+
+    let mut event_test = create_event(ctx);
+       event::add_quest(
+        &mut event_test,
+        b"".to_string(),
+        5,
+        1000001,
+        b"".to_string(),
+        ctx,
+    );
+
+    event::start_quest(
+        &mut event_test,
+        0,
+        00000000001,
+        ctx,
+    );
+
+    assert!(event::check_if_quest_has_started(&event_test, 0));
+
+      event::delete(
+        event_test,
+        ctx,
+    );
 }
 
 

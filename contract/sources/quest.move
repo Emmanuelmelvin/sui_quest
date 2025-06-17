@@ -13,6 +13,7 @@ module sui_quest::quest;
     const EQuestHasStarted: u64 = 100;
     const EQuestNotFound: u64 = 101;
     const EQuestHasNoValidTask: u64 = 102;
+    const EUserEnteredQuestAlready: u64 = 120;
 
     public struct Quest has copy, store, drop {
         name: String,
@@ -72,6 +73,23 @@ module sui_quest::quest;
 
     public fun destroy(q: Quest) {
         // Explicitly destroy fields if needed, or just let q go out of scope if fields have drop.
+    }
+
+    public(package) fun enter(
+        quest: &mut Quest,
+        ctx: &mut TxContext,
+    ){
+        let len = quest.users_entered.length();
+        let i = 0;
+
+        while(i < len){
+            if(ctx.sender() == quest.users_entered[i]){
+                abort EUserEnteredQuestAlready;
+            }else{
+                //add user to the list of users that entered the quest
+                quest.users_entered.push_back(ctx.sender());
+            }
+        }
     }
 
     #[test_only]
