@@ -93,6 +93,12 @@ module sui_quest::quest;
         
     }
 
+    public (package) fun task_count(
+        quest: &Quest
+    ): u8 {
+        quest.task_count
+    }
+
     #[test_only]
     public  fun check_if_quest_has_started(
         quest: &Quest

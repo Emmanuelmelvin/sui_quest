@@ -10,6 +10,7 @@ use std::string::String;
 
 const EEventHasEnded: u64 = 103;
 const ENotAuthorized: u64 = 104;
+const ETaskCountMismatch: u64 = 111;
 
 
 
@@ -118,11 +119,13 @@ public entry fun enter_quest (
     end_time: u64,
     correct_answers: u8,
     total_questions: u8,
+    event_name: vector<u8>,
+    quest_name: vector<u8>,
     ctx: &mut TxContext,
 ){
     assert!(!event::has_ended(event), EEventHasEnded);
-    
     let mut quest = event.get_quest(quest_index);
+    assert!(quest.task_count() == total_questions, );
 
     quest::enter(
         &mut quest,
@@ -135,6 +138,8 @@ public entry fun enter_quest (
         total_questions,
         quest_index,
         end_time,
+        event_name,
+        quest_name,
         ctx,
     );
 
