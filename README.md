@@ -100,8 +100,3 @@ SuiQuest enables **event organizers** to create interactive learning quests. Eac
 - `src/` - Main source code directory
 - `README.md` - Project documentation
 - `package.json` - Project configuration and scripts
-
-## Additional Information
-
-- For more details, refer to the [ChatGPT conversation](https://chatgpt.com/c/684ddd13-e5c0-8008-bfbf-530a240e0318).
-- Update this README as the project evolves.
