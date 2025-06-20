@@ -115,6 +115,9 @@ public entry fun enter_quest (
     event: &mut Event,
     quest_index: u64,
     start_time:  u64,
+    end_time: u64,
+    correct_answers: u8,
+    total_questions: u8,
     ctx: &mut TxContext,
 ){
     assert!(!event::has_ended(event), EEventHasEnded);
@@ -128,6 +131,10 @@ public entry fun enter_quest (
 
     completion::new(
         start_time,
+        correct_answers,
+        total_questions,
+        quest_index,
+        end_time,
         ctx,
     );
 
