@@ -2,7 +2,7 @@ module sui_quest::event_register;
 
 use sui_quest::event::Event;
 
-public struct EventRegister has key {
+public struct EventRegister has key, store {
     id: UID,
     events: vector<Event>,
     count: u64,
@@ -11,7 +11,7 @@ public struct EventRegister has key {
 public struct EVENT_REGISTER has drop {}
 
 fun init(otw: EVENT_REGISTER, ctx: &mut TxContext) {
-    transfer::share_object(create(ctx));
+    transfer::public_share_object(create(ctx));
 
 }
 

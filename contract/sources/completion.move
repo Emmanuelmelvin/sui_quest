@@ -1,29 +1,32 @@
 module sui_quest::completion;
 
 use sui_quest::quest_progress::{Self, QuestProgress};
+use std::ascii::string;
 
+use std::string::String;
 use sui::table::{Self, Table};
+
+use sui::url;
 
 public struct Completion has key, store {
     id: UID,
     start_time: u64,
     end_time: u64,
-    event_name: vector<u8>,
-    quest_name: vector<u8>,
+    event_name: String,
     quest: Table<u64, QuestProgress>,
 }
 
 
-public (package) fun new(
+public (package) fun create(
     start_time: u64,
     correct_answers: u8,
     total_questions: u8,
     quest_index: u64,
     end_time: u64,
-    event_name: vector<u8>,
-    quest_name: vector<u8>,
+    event_name: String,
     ctx: &mut TxContext
-) {
+): Completion {
+
     let mut quest_bag = table::new<u64, QuestProgress>(ctx);
 
     quest_bag.add(
@@ -34,17 +37,13 @@ public (package) fun new(
         )
     );
 
-    let new_quest_completion = Completion{
+     Completion{
         id: object::new(ctx),
         start_time,
         end_time,
         event_name,
-        quest_name,
         quest: quest_bag,
-    };
-
-    transfer::transfer(new_quest_completion, ctx.sender());
-
-}
+    }
+    }
 
 

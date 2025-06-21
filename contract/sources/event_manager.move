@@ -2,7 +2,7 @@ module sui_quest::event_manager;
 
 use sui_quest::quest::{Self, Quest};
 use sui_quest::event_register::{Self, EventRegister};
-use sui_quest::completion::{Self,Completion};
+use sui_quest::completion_manager;
 use sui_quest::event::{Self, Event};
 
 use std::string::String;
@@ -112,15 +112,15 @@ public entry fun start_quest(
 }
 
 //user functions
-public entry fun enter_quest (
+public entry fun submit_quest (
     event: &mut Event,
     quest_index: u64,
     start_time:  u64,
     end_time: u64,
     correct_answers: u8,
     total_questions: u8,
-    event_name: vector<u8>,
-    quest_name: vector<u8>,
+    event_name: String,
+    quest_name: String,
     ctx: &mut TxContext,
 ){
     assert!(!event::has_ended(event), EEventHasEnded);
@@ -132,7 +132,7 @@ public entry fun enter_quest (
         ctx,
     );
 
-    completion::new(
+    completion_manager::new(
         start_time,
         correct_answers,
         total_questions,
