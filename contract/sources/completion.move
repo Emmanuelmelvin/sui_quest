@@ -56,7 +56,7 @@ public (package) fun create(
          event_name: String,
     ){
     
-    assert!(completion.quest.contains(quest_index), EQuestAttemptedAlready);
+    assert!(completion.quests.contains(quest_index), EQuestAttemptedAlready);
 
     completion.quests.add(
         quest_index,
