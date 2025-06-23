@@ -13,7 +13,7 @@ const EQuestAttemptedAlready: u64 = 210;
 public struct Completion has key, store {
     id: UID,
     event_name: String,
-    quest: Table<u64, QuestProgress>,
+    quests: Table<u64, QuestProgress>,
 }
 
 
@@ -42,7 +42,7 @@ public (package) fun create(
      Completion{
         id: object::new(ctx),
         event_name,
-        quest: quest_bag,
+        quests: quest_bag,
     }
     }
 
@@ -58,7 +58,7 @@ public (package) fun create(
     
     assert!(completion.quest.contains(quest_index), EQuestAttemptedAlready);
 
-    completion.quest.add(
+    completion.quests.add(
         quest_index,
         quest_progress::new(
             start_time,
