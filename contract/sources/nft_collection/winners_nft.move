@@ -25,7 +25,7 @@ fun init(
     ctx: &mut TxContext,
 ){
        let keys = vector[
-        utf8(b"name"),
+        utf8(b"name"),  
         utf8(b"description"),
         utf8(b"creator"),
         utf8(b"quest_name"),

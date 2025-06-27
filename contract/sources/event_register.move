@@ -1,6 +1,6 @@
 module sui_quest::event_register;
 
-use sui_quest::event::Event;
+use sui_quest::event::{Self, Event};
 
 public struct EventRegister has key, store {
     id: UID,
@@ -15,7 +15,7 @@ fun init(otw: EVENT_REGISTER, ctx: &mut TxContext) {
 
 }
 
-fun create(ctx: &mut TxContext
+public (package) fun create(ctx: &mut TxContext
 ):EventRegister {
     EventRegister {
         id: object::new(ctx),
@@ -32,12 +32,17 @@ public (package) fun add(
     register.count = register.count + 1;
 }
 
+public (package) fun get_event (
+    register: &mut EventRegister,
+    index: u64
+): &mut Event {
+    &mut register.events[index]
+}
 
-#[test_only]
-public fun create_mock_register(ctx: &mut TxContext): EventRegister<T> {
-    EventRegister{
-        id: object::new(ctx),
-        events: vector<Event>[],
-        count: 0
-    }
+
+public fun delete(
+    register: EventRegister
+){
+    let EventRegister { id, events , count: _} = register;
+    id.delete();
 }

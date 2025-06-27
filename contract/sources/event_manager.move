@@ -5,6 +5,7 @@ use sui_quest::event_register::{Self, EventRegister};
 use sui_quest::completion_manager;
 use sui_quest::event::{Self, Event};
 use sui_quest::participation_nft::ParticipationNft;
+use sui_quest::winners_nft;
 
 use std::string::String;
 
@@ -12,6 +13,7 @@ use std::string::String;
 const EEventHasEnded: u64 = 103;
 const ENotAuthorized: u64 = 104;
 const ETaskCountMismatch: u64 = 111;
+const EEventHasNotEnded: u64 = 300;
 
 
 
@@ -157,49 +159,48 @@ public entry fun submit_quest (
         );
     }
 
-
 }
 
-
-#[test_only]
-public fun create_mock_event(
-    name: String,
-    metadata_id: String,
+public entry fun distribute_reward(
+    event: &mut Event,
+    rank: u64,
+    address: address,
     ctx: &mut TxContext
-): Event {
-    Event {
-        id: object::new(ctx),
-        name: name,
-        quests: vector::empty<Quest>(),
-        orgarnizers: tx_context::sender(ctx),
-        metadata_id: metadata_id,
-        has_ended: false
-    }
+) {
+    assert!(event::has_ended(event), EEventHasNotEnded);
+    assert!(event::organizers(event) == tx_context::sender(ctx), ENotAuthorized);
+
+    winners_nft::mint_to_sender(
+        address,
+        rank,
+        ctx
+    );
+
 }
 
 
-#[test_only]
-public fun get_quest_from_events(
-    event: &Event
-): &vector<Quest> {
-    &event.quests
-}
+// #[test_only]
+// public fun get_quest_from_events(
+//     event: &Event
+// ): &vector<Quest> {
+//     &event.quests
+// }
 
-#[test_only]
-public fun get_quest_count_in_event(
-   event: &Event
-): u64{
-    event.quests.length()
-}
+// #[test_only]
+// public fun get_quest_count_in_event(
+//    event: &Event
+// ): u64{
+//     event.quests.length()
+// }
 
-#[test_only]
-public fun check_if_quest_has_started(
-    event: &Event,
-    quest_index:u64
-):  bool {
-    if(quest::check_if_quest_has_started(&event.quests[quest_index])){
-        true
-    }else{
-        false
-    }
-}
+// #[test_only]
+// public fun check_if_quest_has_started(
+//     event: &Event,
+//     quest_index:u64
+// ):  bool {
+//     if(event.quest.check_if_quest_has_started(quest_index)){
+//         true
+//     }else{
+//         false
+//     }
+// }

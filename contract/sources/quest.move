@@ -1,10 +1,3 @@
-/*
-/// Module: sui_quest
-module sui_quest::sui_quest;
-*/
-
-// For Move coding conventions, see
-// https://docs.sui.io/concepts/sui-move-concepts/conventions
 
 module sui_quest::quest;
     use std::string::String;
@@ -23,7 +16,6 @@ module sui_quest::quest;
         is_started: bool,
         metadata_id: String,
         users_entered: vector<address>,
-        users_winners: vector<address>
     }
 
     public (package) fun new(
@@ -45,8 +37,7 @@ module sui_quest::quest;
             duration_sec: duration_sec,
             is_started: false,
             metadata_id: metadata_id,
-            users_entered: vector::empty(),
-            users_winners: vector::empty()
+            users_entered: vector::empty()
         }
     }
 
@@ -107,15 +98,17 @@ module sui_quest::quest;
 
     #[test_only]
     public  fun check_if_quest_has_started(
-        quest: &Quest
+        quest: vector<Quest>,
+        quest_index: u64,
     ): bool  {
-        if(quest.is_started){
+        if(quest[quest_index].is_started){
             true
         }else{
             false
         }
         
     }
+
 
 
 

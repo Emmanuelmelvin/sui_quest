@@ -24,4 +24,3 @@ public (package) fun participation(
         ctx,
     );
 }
-
