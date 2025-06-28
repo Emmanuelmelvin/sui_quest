@@ -14,6 +14,7 @@ const EEventHasEnded: u64 = 103;
 const ENotAuthorized: u64 = 104;
 const ETaskCountMismatch: u64 = 111;
 const EEventHasNotEnded: u64 = 300;
+const EQuestHasNotStarted: u64 = 310;
 
 
 
@@ -121,27 +122,57 @@ public entry fun start_quest(
 }
 
 //user functions
-public entry fun submit_quest (
-    has_participation_nft: bool,
+public entry fun submit_quest_with_nft(
     participation_nft: &mut ParticipationNft,
     event: &mut Event,
     quest_index: u64,
-    start_time:  u64,
+    start_time: u64,
     end_time: u64,
     correct_answers: u8,
     total_questions: u8,
     ctx: &mut TxContext,
-){
+) {
     assert!(!event::has_ended(event), EEventHasEnded);
     let mut quest = event.get_quest(quest_index);
-    assert!(quest.task_count() == total_questions, );
+    assert!(quest.has_started(), EQuestHasNotStarted);
+    assert!(quest.task_count() == total_questions, ETaskCountMismatch);
 
     quest::enter(
         &mut quest,
         ctx,
     );
 
-    if(!has_participation_nft){
+    completion_manager::edit(
+        participation_nft,
+        start_time,
+        correct_answers,
+        total_questions,
+        quest_index,
+        end_time,
+        *event.get_name(),
+        *quest.get_name(),
+    );
+}
+
+public entry fun submit_quest_without_nft(
+    event: &mut Event,
+    quest_index: u64,
+    start_time: u64,
+    end_time: u64,
+    correct_answers: u8,
+    total_questions: u8,
+    ctx: &mut TxContext,
+) {
+    assert!(!event::has_ended(event), EEventHasEnded);
+    let mut quest = event.get_quest(quest_index);
+    assert!(quest.has_started(), EQuestHasNotStarted);
+    assert!(quest.task_count() == total_questions, ETaskCountMismatch);
+
+    quest::enter(
+        &mut quest,
+        ctx,
+    );
+
     completion_manager::new(
         start_time,
         correct_answers,
@@ -152,19 +183,6 @@ public entry fun submit_quest (
         *quest.get_name(),
         ctx,
     );
-    } else {
-        completion_manager::edit(
-            participation_nft,
-            start_time,
-            correct_answers,
-            total_questions,
-            quest_index,
-            end_time,
-            *event.get_name(),
-            *quest.get_name(),
-        );
-    }
-
 }
 
 public entry fun distribute_reward(
@@ -173,7 +191,7 @@ public entry fun distribute_reward(
     address: address,
     ctx: &mut TxContext
 ) {
-    assert!(event::has_ended(event), EEventHasNotEnded);
+    assert!(!event::has_ended(event), EEventHasNotEnded);
     assert!(event::organizers(event) == tx_context::sender(ctx), ENotAuthorized);
 
     winners_nft::mint_to_sender(

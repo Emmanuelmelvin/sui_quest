@@ -96,6 +96,16 @@ module sui_quest::quest;
         &quest.name
     }
 
+    public (package) fun has_started(
+        quest: &Quest
+    ): bool {
+        if(quest.is_started){
+            true
+        }else {
+            false
+        }
+    }
+
     #[test_only]
     public  fun check_if_quest_has_started(
         quest: vector<Quest>,
