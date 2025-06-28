@@ -43,6 +43,13 @@ public (package) fun get_event (
 public fun delete(
     register: EventRegister
 ){
-    let EventRegister { id, events , count: _} = register;
+    let EventRegister { id, mut events , count: _} = register;
+
+    while(!events.is_empty()){
+        let event = events.pop_back();
+        event.delete();
+    };
+
+    events.destroy_empty();
     id.delete();
 }

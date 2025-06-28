@@ -39,6 +39,12 @@ public (package) fun end(
     event.has_ended = true;
 }
 
+public (package) fun quest_count (
+    event: &mut Event
+): u64 {
+    event.quests.length()
+}
+
 public (package) fun quests(
     event: &mut Event
 ): vector<Quest>{

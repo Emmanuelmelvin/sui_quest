@@ -70,6 +70,12 @@ public entry fun add_quest(
     event.add_quest(new_quest);
    }
 
+public entry fun quest_count(
+    event: &mut Event
+): u64 {
+    event.quest_count()
+}
+
 
 public entry fun remove_quest(
     event: &mut Event,
