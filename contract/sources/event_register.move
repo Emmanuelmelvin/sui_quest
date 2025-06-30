@@ -1,6 +1,7 @@
 module sui_quest::event_register;
 
 use sui_quest::event::{Self, Event};
+use sui::event;
 
 public struct EventRegister has key, store {
     id: UID,
@@ -8,10 +9,23 @@ public struct EventRegister has key, store {
     count: u64,
 }
 
+public struct EventRegisterCreationEvent has drop {
+    id: ID,
+    creator: address,
+}
+
 public struct EVENT_REGISTER has drop {}
 
 fun init(otw: EVENT_REGISTER, ctx: &mut TxContext) {
-    transfer::public_share_object(create(ctx));
+    let event_register = create(ctx);
+    transfer::public_share_object(event_register);
+
+    event::emit(
+        EventRegisterCreationEvent {
+            id: object::id(&event_register),
+            creator: ctx.sender(),
+        }
+    );
 
 }
 
@@ -22,6 +36,7 @@ public (package) fun create(ctx: &mut TxContext
         events: vector<Event>[],
         count: 0,
     }
+
 }
 
 public (package) fun add(
@@ -30,6 +45,8 @@ public (package) fun add(
 ) {
     vector::push_back(&mut register.events, event);
     register.count = register.count + 1;
+
+
 }
 
 public (package) fun get_event (
