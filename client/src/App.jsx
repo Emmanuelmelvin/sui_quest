@@ -1,13 +1,17 @@
 import { WalletProvider } from "@suiet/wallet-kit";
 import { Route, Routes} from "react-router-dom";
 import Event from '../src/pages/Events.jsx';
+import CreateEvent from '../src/pages/CreateEvent.jsx';
+import Layout from "./components/Layout.jsx";
 
 function App() {
 
   return (
     <WalletProvider>
     <Routes>
-      <Route path='/events' element={<Event/>}/>
+      <Route element={<Layout/>}/>
+      <Route path='/' element={<Event/>}/>
+      <Route path="/create-event" element={<CreateEvent/>}/>
     </Routes>
     </WalletProvider>
   )

@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  color: #111;
+}
+
+.App {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.layout {
+    flex-grow: 1;
+    padding: 3;
+}
