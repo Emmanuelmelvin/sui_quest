@@ -12,6 +12,22 @@ body {
 }
 
 .layout {
-    flex-grow: 1;
-    padding: 3;
+  flex-grow: 1;
+  padding: 3;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar {
+  background-color: #333;
+  padding: 10px;
 }
