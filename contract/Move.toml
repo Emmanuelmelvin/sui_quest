@@ -1,41 +1,27 @@
 [package]
 name = "sui_quest"
-edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move4
+edition = "2024.beta"  # Use "2024.beta" for modern Move features. Use "legacy" for pre-2024 syntax.
 version = "0.0.1"
 published-at = "0x79819cfbf000b4cb1599e5c289216336b02f412b1e6e330e080830e6aec3166e"
 license = "MIT"
-# authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
-
-[package.publish]
-upgrade_policy = "compatible"
+authors = ["Emmanuel Chidi <chidiemmanuel2005@gmail.com>"]  # Replace with actual name/email or remove if private
+publish = "compatible"
 
 [dependencies]
-
-# For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
-# Revision can be a branch, a tag, and a commit hash.
-# MyRemotePackage = { git = "https://some.remote/host.git", subdir = "remote/path", rev = "main" }
-
-# For local dependencies use `local = path`. Path is relative to the package root
-# Local = { local = "../path/to" }
-
-# To resolve a version conflict and force a specific version for dependency
-# override use `override = true`
-# Override = { local = "../conflicting/version", override = true }
+# Add dependencies here if your package imports from other Move modules
+# Example:
+# sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "main" }
 
 [addresses]
-sui_quest = "0x0"
-
-# Named addresses will be accessible in Move as `@name`. They're also exported:
-# for example, `std = "0x1"` is exported by the Standard Library.
-# alice = "0xA11CE"
+sui_quest = "0x0"  # Use "0x0" as placeholder for development, will be replaced during publish
 
 [dev-dependencies]
-# The dev-dependencies section allows overriding dependencies for `--test` and
-# `--dev` modes. You can introduce test-only dependencies here.
-# Local = { local = "../path/to/dev-build" }
+# Add dev-only modules for testing if needed
+# Example:
+# test_helpers = { local = "../test_helpers" }
 
 [dev-addresses]
-# The dev-addresses section allows overwriting named addresses for the `--test`
-# and `--dev` modes.
+# Used for tests or `--dev` mode with address overrides
+# Example:
 # alice = "0xB0B"
 

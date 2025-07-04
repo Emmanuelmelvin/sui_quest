@@ -1,7 +1,7 @@
 module sui_quest::event_register;
 
 use sui_quest::event::{Self, Event};
-use sui::event;
+use sui::event as push;
 
 public struct EventRegister has key, store {
     id: UID,
@@ -9,7 +9,7 @@ public struct EventRegister has key, store {
     count: u64,
 }
 
-public struct EventRegisterCreationEvent has drop {
+public struct EventRegisterCreationEvent has drop, copy {
     id: ID,
     creator: address,
 }
@@ -18,14 +18,14 @@ public struct EVENT_REGISTER has drop {}
 
 fun init(otw: EVENT_REGISTER, ctx: &mut TxContext) {
     let event_register = create(ctx);
-    transfer::public_share_object(event_register);
 
-    event::emit(
+    push::emit(
         EventRegisterCreationEvent {
             id: object::id(&event_register),
             creator: ctx.sender(),
         }
     );
+    transfer::public_share_object(event_register);
 
 }
 
