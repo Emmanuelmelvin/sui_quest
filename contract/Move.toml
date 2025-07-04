@@ -1,8 +1,13 @@
 [package]
 name = "sui_quest"
-edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
-# license = ""           # e.g., "MIT", "GPL", "Apache 2.0"
+edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move4
+version = "0.0.1"
+published-at = "0x79819cfbf000b4cb1599e5c289216336b02f412b1e6e330e080830e6aec3166e"
+license = "MIT"
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
+
+[package.publish]
+upgrade_policy = "compatible"
 
 [dependencies]
 
