@@ -34,7 +34,7 @@ public entry fun new(
 
 }
 
-
+    
 public entry fun end(
     event: &mut Event,
     ctx: &mut TxContext
