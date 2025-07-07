@@ -1,8 +1,8 @@
 [package]
 name = "sui_quest"
 edition = "2024.beta"  # Use "2024.beta" for modern Move features. Use "legacy" for pre-2024 syntax.
-version = "0.0.1"
-published-at = "0x79819cfbf000b4cb1599e5c289216336b02f412b1e6e330e080830e6aec3166e"
+version = "0.0.2"
+published-at = "0xde0df1b67e2ce2ad6a82b67329b3e88542ffc2e2a9adeb49a78a9ca8b9868bed"
 license = "MIT"
 authors = ["Emmanuel Chidi <chidiemmanuel2005@gmail.com>"]  # Replace with actual name/email or remove if private
 publish = "compatible"

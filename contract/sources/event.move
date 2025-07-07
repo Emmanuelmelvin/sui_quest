@@ -80,6 +80,12 @@ public (package) fun organizers(
     event.organizers
 }
 
+public (package) fun owner(
+    event: &Event
+): address {
+    event.organizers
+}
+
 public(package) fun delete(
     event: Event
 ){

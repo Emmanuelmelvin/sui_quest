@@ -42,8 +42,8 @@ public entry fun end(
     assert!(!event::has_ended(event), EEventHasEnded);
     assert!(event::organizers(event) == tx_context::sender(ctx), ENotAuthorized);
     event.end();
-    // event::emit(*event); // REMOVE: Event does not have copy+drop
 }
+
  
 public entry fun delete(
     event: Event,
@@ -54,6 +54,7 @@ public entry fun delete(
 
 public entry fun add_quest(
     event: &mut Event,
+    event_register: &mut EventRegister,
     name: String,
     task_count: u8,
     duration_sec: u64,

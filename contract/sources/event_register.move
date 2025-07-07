@@ -5,8 +5,13 @@ use sui::event as push;
 
 public struct EventRegister has key, store {
     id: UID,
-    events: vector<Event>,
+    events: vector<EventMeta>,
     count: u64,
+}
+
+public struct EventMeta has store, drop {
+    id: ID,
+    owner: address
 }
 
 public struct EventRegisterCreationEvent has drop, copy {
@@ -33,7 +38,7 @@ public (package) fun create(ctx: &mut TxContext
 ):EventRegister {
     EventRegister {
         id: object::new(ctx),
-        events: vector<Event>[],
+        events: vector<EventMeta>[],
         count: 0,
     }
 
@@ -43,30 +48,45 @@ public (package) fun add(
     register: &mut EventRegister,
     event: Event,
 ) {
-    vector::push_back(&mut register.events, event);
+    vector::push_back(&mut register.events,
+        EventMeta {
+            id: object::id(&event),
+            owner: event.owner()
+        }
+     );
     register.count = register.count + 1;
-
+    transfer::public_share_object(event);
 
 }
 
-public (package) fun get_event (
+public (package) fun get_event_with_index (
     register: &mut EventRegister,
     index: u64
-): &mut Event {
+): &mut EventMeta {
     &mut register.events[index]
 }
+
+
+// public (package) fun get_event_with_address(
+//     register: &mut EventRegister,
+//     event_id: UID
+// ): &mut Event {
+//     let events = &mut register.events;
+//     let len = vector::length(events);
+//     let mut i = 0;
+//     while (i < len) {
+//         let event_ref = vector::borrow_mut(events, i);
+//         if (event_ref.id() == event_id) {
+//             return event_ref;
+//         };
+//         i = i + 1;
+//     };
+//    }
 
 
 public fun delete(
     register: EventRegister
 ){
-    let EventRegister { id, mut events , count: _} = register;
-
-    while(!events.is_empty()){
-        let event = events.pop_back();
-        event.delete();
-    };
-
-    events.destroy_empty();
+    let EventRegister { id, events:  _ , count: _} = register;
     id.delete();
 }
