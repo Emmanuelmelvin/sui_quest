@@ -1,0 +1,21 @@
+.footer-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.socials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 1rem;
+}
+
+.socials div {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    background-color: white;
+}

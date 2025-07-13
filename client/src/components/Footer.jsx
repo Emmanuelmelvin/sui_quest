@@ -1,8 +1,25 @@
-import React from 'react'
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <footer className="footer-wrapper">
+      <hr />
+      <div>
+        <span>
+          &copy; {new Date().getFullYear()} SuiQuest. All rights reserved.
+        </span>
+        <div className="socials">
+          <div>
+            G
+          </div>
+           <div>
+            G
+          </div>
+           <div>
+            G
+          </div>
+        </div>
+      </div>
+    </footer>
   )
 }
 
