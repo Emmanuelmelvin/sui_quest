@@ -4,6 +4,8 @@ import Event from '../src/pages/Events.jsx';
 import CreateEvent from '../src/pages/CreateEvent.jsx';
 import NotFound from '../src/pages/NotFound.jsx'
 import Layout from "./components/Layout.jsx";
+import MyAccount from "./pages/MyAccount.jsx";
+import { PACKAGE_ID } from "../../constant.js";
 
 
 import { createNetworkConfig, SuiClientProvider, WalletProvider } from '@mysten/dapp-kit';
@@ -15,7 +17,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const { networkConfig } = createNetworkConfig({
   localnet: { url: getFullnodeUrl('localnet') },
   mainnet: { url: getFullnodeUrl('mainnet') },
-  devnet: { url: getFullnodeUrl('devnet') }
+  devnet: { 
+    url: getFullnodeUrl('devnet'),
+    variables: {
+			myMovePackageId: PACKAGE_ID,
+		},
+   }
 });
 
 const queryClient = new QueryClient();
@@ -51,6 +58,7 @@ function AppRoutes() {
         <Route index element={<Event />} />
         <Route path="create" element={<CreateEvent />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="account" element={<MyAccount/>}/>
       </Route>
     </Routes>
 
