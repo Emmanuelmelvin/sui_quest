@@ -17,8 +17,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const { networkConfig } = createNetworkConfig({
   localnet: { url: getFullnodeUrl('localnet') },
   mainnet: { url: getFullnodeUrl('mainnet') },
-  devnet: { 
-    url: getFullnodeUrl('devnet'),
+  testnet: { 
+    url: getFullnodeUrl('testnet'),
     variables: {
 			myMovePackageId: PACKAGE_ID,
 		},
@@ -28,7 +28,7 @@ const { networkConfig } = createNetworkConfig({
 const queryClient = new QueryClient();
 
 function App() {
-const [activeNetwork, setActiveNetwork] = useState('devnet');
+const [activeNetwork, setActiveNetwork] = useState('testnet');
 
   return (
     <QueryClientProvider client={queryClient}>
