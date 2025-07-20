@@ -82,6 +82,10 @@ import RegisterDisplay from "../components/RegisterDisplay";
           >
             My Accounts
           </button>
+          <button
+          onClick={()=>{navigate('create')}}>
+            Create Event
+            </button>
           </div>
     </div>
   );

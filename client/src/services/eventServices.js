@@ -29,3 +29,5 @@ export const formatRegisterObject = async (register) => {
     );
     return fetchedEvents
 };
+
+
