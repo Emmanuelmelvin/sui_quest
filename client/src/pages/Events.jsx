@@ -10,6 +10,7 @@ import '../styles/event.css'
 
 import { useEventRegister } from "../services/suiClient";
 import { useEffect } from "react";
+import RegisterDisplay from "../components/RegisterDisplay";
 
 
  const Events = () => {
@@ -18,13 +19,14 @@ import { useEffect } from "react";
   const wallets = useWallets();
 	const { mutate: connect } = useConnectWallet();
   const ctx = useSuiClientContext();
-  const register = useEventRegister()
+
+  const register = useEventRegister();
 
   const navigate = useNavigate()
 
   useEffect(()=> {
     console.log(register)
-  },[])
+  },[ctx])
 
 
   return (
@@ -68,6 +70,9 @@ import { useEffect } from "react";
 						</button>
 					</li>
 				))}
+        <br/>
+        <h3>Event Register</h3>
+        <RegisterDisplay register={register} />
         <br/>
         <div>
           Go to my Accounts

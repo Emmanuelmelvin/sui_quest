@@ -3,7 +3,8 @@ import {
     useCurrentAccount
 } from '@mysten/dapp-kit';
 
-import  {EVENT_REGISTER_OBJECT_ID } from  '../../../constant.js'
+import { EVENT_REGISTER_OBJECT_ID } from '../../../constant.js'
+import { formatRegisterObject } from './eventServices.js';
 const getCurrentAccount = () => {
     return useCurrentAccount();
 }
@@ -41,16 +42,27 @@ export const useEventRegister = () => {
     const account = useCurrentAccount();
     const query = useSuiClientQuery(
         'getObject',
-        EVENT_REGISTER_OBJECT_ID
+        {
+            id: EVENT_REGISTER_OBJECT_ID,
+            options: {
+                showContent: true,
+                showOwner: true,
+                showType: true,
+                showPreviousTransaction: false,
+                showDisplay: false,
+                showStorageRebate: false,
+            },
+        }
     );
 
     if (account) {
         const { data, isPending, isError, error, refetch } = query;
+       const eventsFromRegister = formatRegisterObject(data);
         return {
             requestSent: true,
             message: "Request Successful",
             responseObject: {
-                data,
+                data: eventsFromRegister,
                 isPending,
                 isError,
                 error,

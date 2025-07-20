@@ -37,7 +37,7 @@ const [activeNetwork, setActiveNetwork] = useState('testnet');
 				setActiveNetwork(network);
 			}}
       networks={networkConfig} 
-      network='devnet'>
+      network='testnet'>
         <WalletProvider>
           <AppRoutes />
           {
